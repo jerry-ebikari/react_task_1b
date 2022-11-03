@@ -4,10 +4,10 @@ import MkdSDK from "./utils/MkdSDK";
 export const AuthContext = React.createContext();
 
 const initialState = {
-  isAuthenticated: false,
+  isAuthenticated: Boolean(localStorage.getItem("isAuthenticated")),
   user: null,
-  token: null,
-  role: null,
+  token: localStorage.getItem("token"),
+  role: localStorage.getItem("role"),
 };
 
 const reducer = (state, action) => {

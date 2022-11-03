@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { useDrag } from 'react-dnd';
 import MkdSDK from "../utils/MkdSDK";
 import { AuthContext } from "../authContext";
 import "../styles/AdminDashboardPage.css";
@@ -51,14 +52,37 @@ const AdminDashboardPage = () => {
   }
 
   const nextPage = () => {
-    setPage((prev) => prev + 1)
+    sdk.callRestAPI({
+      page: page + 1,
+      limit: limit
+    }, "PAGINATE")
+    .then((res) => {
+      setPage((prev) => prev + 1);
+      setVideos(() => res.list.sort((a, b) => {
+        return Number(a.like) - Number(b.like)
+      }));
+    })
+    
   }
 
   const previousPage = () => {
-    setPage((prev) => prev - 1)
+    sdk.callRestAPI({
+      page: page - 1,
+      limit: limit
+    }, "PAGINATE")
+    .then((res) => {
+      setPage((prev) => prev - 1);
+      setVideos(() => res.list.sort((a, b) => {
+        return Number(a.like) - Number(b.like)
+      }));
+    })
   }
 
   useEffect(() => {
+    const t = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
     sdk.callRestAPI({
       page: page,
       limit: limit
@@ -68,15 +92,10 @@ const AdminDashboardPage = () => {
         return Number(a.like) - Number(b.like)
       }));
     })
-  }, [page])
-
-  useEffect(() => {
-    const t = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
 
     return (() => {clearInterval(t)});
   }, [])
+  
   return (
     <>
       <header className="header">
