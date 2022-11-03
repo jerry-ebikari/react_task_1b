@@ -104,6 +104,13 @@ const AdminDashboardPage = () => {
           </>)
         })}
       </div>
+      {
+
+      <div className="next-prev-section">
+        <button className="control-btn" disabled={page == 1}>Previous</button>
+        <button className="control-btn">Next</button>
+      </div>
+      }
     </>
   );
 };
