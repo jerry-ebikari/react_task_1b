@@ -16,11 +16,12 @@ const reducer = (state, action) => {
       //TODO
       localStorage.setItem("token", action.payload.token)
       localStorage.setItem("role", action.payload.role)
+      localStorage.setItem("isAuthenticated", true)
       return {
-        ...state,
         isAuthenticated: true,
         user: action.payload.user,
-        token: action.payload.token
+        token: action.payload.token,
+        role: action.payload.role
       };
     case "LOGOUT":
       localStorage.clear();
@@ -38,11 +39,11 @@ let sdk = new MkdSDK();
 
 export const tokenExpireError = (dispatch, errorMessage) => {
   const role = localStorage.getItem("role");
-  if (errorMessage === "TOKEN_EXPIRED") {
+  if (localStorage.getItem("isAuthenticated") && errorMessage === "TOKEN_EXPIRED") {
     dispatch({
-      type: "Logout",
+      type: "LOGOUT",
     });
-    window.location.href = "/" + role + "/login";
+    window.location.href = `/${role}/login`
   }
 };
 
@@ -53,9 +54,7 @@ const AuthProvider = ({ children }) => {
     //TODO
     if (localStorage.getItem("role")) {
       sdk.check(localStorage.getItem("role"))
-      .then(() => {
-
-      })
+      .then(() => {})
       .catch(() => {
         tokenExpireError(dispatch, "TOKEN_EXPIRED")
       })

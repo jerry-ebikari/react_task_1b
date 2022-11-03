@@ -1,0 +1,143 @@
+body {
+    background-color: var(--page-background);
+    padding-left: clamp(10px, 5vw, 50px);
+    padding-right: clamp(10px, 5vw, 50px);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 100px;
+}
+
+.logo {
+    color: var(--white);
+    font-size: 48px;
+    font-weight: 900;
+    margin: 0;
+    padding: 0;
+}
+
+.logout-btn {
+    background-color: var(--primary-color);
+    display: flex;
+    gap: 9px;
+    justify-content: center;
+    align-items: center;
+    height: 48px;
+    border-radius: 40px;
+    padding: 0 24px;
+    border: none;
+    outline: none;
+}
+
+.logout-btn span {
+    color: var(--primary-btn-text);
+}
+
+.title-section {
+    margin-bottom: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title {
+    color: var(--white);
+    font-size: 40px;
+}
+
+.date-section {
+    height: 56px;
+    background-color: var(--gray);
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 0 24px;
+    border-radius: 16px;
+}
+
+.date-section p {
+    color: var(--white);
+}
+
+.submission-status-btn {
+    background-color: var(--primary-color);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.table {
+    display: grid;
+    grid-template-columns: 30px repeat(3, auto);
+    row-gap: 15px;
+}
+
+.last {
+    text-align: right;
+}
+
+.table-header, .sno {
+    color: #666666;
+    font-size: 16px;
+}
+
+.sno-header {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.cell {
+    border-top: 1px solid #666666;
+    border-bottom: 1px solid #666666;
+    padding: 10px;
+}
+
+.left-cell {
+    border-left: 1px solid #666666;
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+}
+
+.right-cell {
+    border-right: 1px solid #666666;
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+}
+
+.video-title-section {
+    display: flex;
+    gap: 16px;
+}
+
+.video-title-section img {
+    width: 118px;
+    height: 64px;
+    border-radius: 8px;
+}
+
+.video-title-section p, .video-like {
+    color: var(--white);
+}
+
+.author {
+    color: var(--secondary-color);
+}
+
+.video-like-section {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+
+.video-like {
+    text-align: end;
+}
+
+.v-align {
+    display: flex;
+    align-items: center;
+}

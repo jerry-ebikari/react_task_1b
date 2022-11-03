@@ -41,6 +41,7 @@ const AdminLoginPage = () => {
         }
       })
       showToast(globalDispatch, "Logged in");
+      navigate("/admin/dashboard")
     } catch (err) {
       showToast(globalDispatch, "Login failed, please try again")
     }

@@ -1,10 +1,98 @@
-import React from "react";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import MkdSDK from "../utils/MkdSDK";
+import "../styles/AdminDashboardPage.css";
+
+
+const monthMap = {
+  0: "Jan",
+  1: "Feb",
+  2: "Mar",
+  3: "Apr",
+  4: "May",
+  5: "Jun",
+  6: "Jul",
+  7: "Aug",
+  8: "Sep",
+  9: "Oct",
+  10: "Nov",
+  11: "Dec"
+}
+
+function formatDate(date) {
+  let day = date.getDate();
+  let month = monthMap[date.getMonth()];
+  let year = date.getFullYear();
+  return `${String(day).padStart(2, "0")} ${month} ${year}`;
+}
+
+function formatTime(date) {
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  return `${String(hours).padStart(2, 0)} : ${String(minutes).padStart(2, 0)}`;
+}
+
+let sdk = new MkdSDK();
+
 
 const AdminDashboardPage = () => {
+  let [currentTime, setCurrentTime] = useState(new Date());
+  let [videos, setVideos] = useState([]);
+  let [page, setPage] = useState(1);
+  let [limit, setLimit] = useState(10);
+  useEffect(() => {
+    const t = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    sdk.callRestAPI({
+      page: page,
+      limit: limit
+    }, "PAGINATE")
+    .then((res) => {
+      setVideos(() => res.list.sort((a, b) => {
+        return Number(a.like) - Number(b.like)
+      }));
+      console.log(res.list);
+    })
+
+    return (() => {clearInterval(t)});
+  }, [])
   return (
     <>
-      <div className="w-full flex justify-center items-center text-7xl h-screen text-gray-700 ">
-        Dashboard
+      <header className="header">
+        <h2 className="logo">APP</h2>
+        <button className="logout-btn">
+          <img src="/assets/icons/profile-icon.svg" alt="" />
+          <span>Logout</span>
+        </button>
+      </header>
+      <div className="title-section">
+        <h1 className="title">Today's leaderboard</h1>
+        <div className="date-section">
+          <p className="date">{formatDate(currentTime)}</p>
+          <button className="submission-status-btn">Submissions open</button>
+          <p className="date">{formatTime(currentTime)}</p>
+        </div>
+      </div>
+      <div className="table">
+        <p className="table-header sno-header">#</p>
+        <p className="table-header">Title</p>
+        <p className="table-header">Author</p>
+        <p className="table-header last">Most Liked</p>
+        {videos.map((video, index) => {
+          return (<>
+            <p className="sno v-align cell left-cell">{String(index + 1).padStart(2, "0")}</p>
+            <div className="video-title-section v-align cell">
+              <img src={video.photo} alt="" />
+              <p>{video.title}</p>
+            </div>
+            <p className="author v-align cell">{video.username}</p>
+            <div className="video-like-section v-align cell right-cell">
+              <p className="video-like">{video.like}</p>
+              <img src="/assets/icons/up-arrow.svg" alt="" />
+            </div>
+          </>)
+        })}
       </div>
     </>
   );
