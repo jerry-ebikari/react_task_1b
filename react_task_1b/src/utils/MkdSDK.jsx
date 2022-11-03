@@ -21,9 +21,10 @@ export default function MkdSDK() {
         password: password,
         role: role
       }),
-      headers: {
-        "Content-Type": "application/json"
-      }
+      headers: new Headers({
+        "Content-Type": "application/json",
+        "x-project": "cmVhY3R0YXNrOjVmY2h4bjVtOGhibzZqY3hpcTN4ZGRvZm9kb2Fjc2t5ZQ=="
+      })
     });
     let data = res.json();
     if (res.status >= 400) {
@@ -103,6 +104,16 @@ export default function MkdSDK() {
 
   this.check = async function (role) {
     //TODO
+    let token = localStorage.getItem("token");
+    const res = await fetch(`${this.baseUrl()}/v2/api/lambda/check`, {
+      method: "POST",
+      body: JSON.stringify({role: 'admin'}),
+      headers: new Headers({
+        "Authorization": `Bearer ${token}`,
+        "x-project": "cmVhY3R0YXNrOjVmY2h4bjVtOGhibzZqY3hpcTN4ZGRvZm9kb2Fjc2t5ZQ=="
+      })
+    });
+
   };
 
   return this;
