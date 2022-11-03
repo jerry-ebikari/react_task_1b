@@ -14,6 +14,7 @@ export default function MkdSDK() {
   };
   
   this.login = async function (email, password, role) {
+    // TODO
     const res = await fetch(`${this.baseUrl()}/v2/api/lambda/login`, {
       method: "POST",
       body: JSON.stringify({
@@ -109,11 +110,14 @@ export default function MkdSDK() {
       method: "POST",
       body: JSON.stringify({role: 'admin'}),
       headers: new Headers({
-        "Authorization": `Bearer ${token}`,
+        "Bearer": token,
         "x-project": "cmVhY3R0YXNrOjVmY2h4bjVtOGhibzZqY3hpcTN4ZGRvZm9kb2Fjc2t5ZQ=="
       })
     });
-
+    if (res.status != 200) {
+      throw new Error("Token expired")
+    }
+    return true;
   };
 
   return this;
