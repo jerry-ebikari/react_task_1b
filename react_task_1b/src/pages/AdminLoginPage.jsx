@@ -5,7 +5,7 @@ import * as yup from "yup";
 import MkdSDK from "../utils/MkdSDK";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../authContext";
-import { GlobalContext } from "../globalContext";
+import { showToast, GlobalContext } from "../globalContext";
 
 const AdminLoginPage = () => {
   const schema = yup
@@ -35,9 +35,9 @@ const AdminLoginPage = () => {
       let userData = res;
       localStorage.setItem("token", userData.token);
       localStorage.setItem("role", userData.role);
-      globalDispatch({ type: "SNACKBAR", payload: { message: "Logged in" } });
+      showToast(globalDispatch, "Logged in");
     } catch (err) {
-      globalDispatch({ type: "SNACKBAR", payload: { message: "Login failed, try again" } });
+      showToast(globalDispatch, "Login failed, please try again")
     }
     //TODO
   };
