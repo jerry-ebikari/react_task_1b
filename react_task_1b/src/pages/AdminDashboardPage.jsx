@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import MkdSDK from "../utils/MkdSDK";
+import { AuthContext } from "../authContext";
 import "../styles/AdminDashboardPage.css";
 
 
@@ -40,6 +41,15 @@ const AdminDashboardPage = () => {
   let [videos, setVideos] = useState([]);
   let [page, setPage] = useState(1);
   let [limit, setLimit] = useState(10);
+  const { dispatch } = React.useContext(AuthContext);
+
+  const logout = () => {
+    dispatch({
+      type: "LOGOUT",
+    });
+    window.location.href = `/admin/login`
+  }
+
   useEffect(() => {
     const t = setInterval(() => {
       setCurrentTime(new Date());
@@ -61,7 +71,7 @@ const AdminDashboardPage = () => {
     <>
       <header className="header">
         <h2 className="logo">APP</h2>
-        <button className="logout-btn">
+        <button className="logout-btn" onClick={logout}>
           <img src="/assets/icons/profile-icon.svg" alt="" />
           <span>Logout</span>
         </button>
