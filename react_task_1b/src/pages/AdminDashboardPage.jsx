@@ -101,7 +101,7 @@ const AdminDashboardPage = () => {
         <p className="table-header last">Most Liked</p>
         {videos.map((video, index) => {
           return (<>
-            <p className="sno v-align cell left-cell">{page * index + 1}</p>
+            <p className="sno v-align cell left-cell">{(page - 1) * 10 + (index + 1)}</p>
             <div className="video-title-section v-align cell">
               <img src={video.photo} alt="" />
               <p>{video.title}</p>
