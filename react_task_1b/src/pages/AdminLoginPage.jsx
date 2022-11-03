@@ -28,18 +28,23 @@ const AdminLoginPage = () => {
   });
 
   const onSubmit = async (data) => {
+    // TODO
     let sdk = new MkdSDK();
     try {
       let res = await sdk.login(data.email, data.password, "admin")
-      console.log(res)
-      let userData = res;
-      localStorage.setItem("token", userData.token);
-      localStorage.setItem("role", userData.role);
+      dispatch({
+        type: "LOGIN",
+        payload: {
+          token: res.token,
+          role: res.role,
+          user: res.user_id
+        }
+      })
+      console.log(res);
       showToast(globalDispatch, "Logged in");
     } catch (err) {
       showToast(globalDispatch, "Login failed, please try again")
     }
-    //TODO
   };
 
   return (
