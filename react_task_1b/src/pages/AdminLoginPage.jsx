@@ -40,7 +40,6 @@ const AdminLoginPage = () => {
           user: res.user_id
         }
       })
-      console.log(res);
       showToast(globalDispatch, "Logged in");
     } catch (err) {
       showToast(globalDispatch, "Login failed, please try again")

@@ -24,7 +24,7 @@ export default function MkdSDK() {
       }),
       headers: new Headers({
         "Content-Type": "application/json",
-        "x-project": "cmVhY3R0YXNrOjVmY2h4bjVtOGhibzZqY3hpcTN4ZGRvZm9kb2Fjc2t5ZQ=="
+        "x-project": base64Encode
       })
     });
     let data = res.json();
@@ -105,15 +105,16 @@ export default function MkdSDK() {
 
   this.check = async function (role) {
     //TODO
-    let token = localStorage.getItem("token");
     const res = await fetch(`${this.baseUrl()}/v2/api/lambda/check`, {
       method: "POST",
-      body: JSON.stringify({role: 'admin'}),
+      body: JSON.stringify({role: role}),
       headers: new Headers({
-        "Bearer": token,
-        "x-project": "cmVhY3R0YXNrOjVmY2h4bjVtOGhibzZqY3hpcTN4ZGRvZm9kb2Fjc2t5ZQ=="
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+        "x-project": base64Encode
       })
     });
+    console.log(res.status)
     if (res.status != 200) {
       throw new Error("Token expired")
     }

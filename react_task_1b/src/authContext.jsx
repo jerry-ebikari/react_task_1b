@@ -51,7 +51,18 @@ const AuthProvider = ({ children }) => {
 
   React.useEffect(() => {
     //TODO
-    sdk.check()
+    if (localStorage.getItem("role")) {
+      sdk.check(localStorage.getItem("role"))
+      .then(() => {
+
+      })
+      .catch(() => {
+        tokenExpireError(dispatch, "TOKEN_EXPIRED")
+      })
+      
+    } else {
+      tokenExpireError(dispatch, "TOKEN_EXPIRED")
+    }
   }, []);
 
   return (
