@@ -50,10 +50,15 @@ const AdminDashboardPage = () => {
     window.location.href = `/admin/login`
   }
 
+  const nextPage = () => {
+    setPage((prev) => prev + 1)
+  }
+
+  const previousPage = () => {
+    setPage((prev) => prev - 1)
+  }
+
   useEffect(() => {
-    const t = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
     sdk.callRestAPI({
       page: page,
       limit: limit
@@ -62,8 +67,13 @@ const AdminDashboardPage = () => {
       setVideos(() => res.list.sort((a, b) => {
         return Number(a.like) - Number(b.like)
       }));
-      console.log(res.list);
     })
+  }, [page])
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
 
     return (() => {clearInterval(t)});
   }, [])
@@ -91,7 +101,7 @@ const AdminDashboardPage = () => {
         <p className="table-header last">Most Liked</p>
         {videos.map((video, index) => {
           return (<>
-            <p className="sno v-align cell left-cell">{String(index + 1).padStart(2, "0")}</p>
+            <p className="sno v-align cell left-cell">{page * index + 1}</p>
             <div className="video-title-section v-align cell">
               <img src={video.photo} alt="" />
               <p>{video.title}</p>
@@ -107,8 +117,8 @@ const AdminDashboardPage = () => {
       {
 
       <div className="next-prev-section">
-        <button className="control-btn" disabled={page == 1}>Previous</button>
-        <button className="control-btn">Next</button>
+        <button className="control-btn" onClick={previousPage} disabled={page == 1}>Previous</button>
+        <button className="control-btn" onClick={nextPage}>Next</button>
       </div>
       }
     </>
