@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -17,6 +17,7 @@ const AdminLoginPage = () => {
 
   const { dispatch } = React.useContext(AuthContext);
   const { dispatch: globalDispatch } = React.useContext(GlobalContext);
+  let [loggingIn, setLoggingIn] = useState(false);
   const navigate = useNavigate();
   const {
     register,
@@ -29,21 +30,26 @@ const AdminLoginPage = () => {
 
   const onSubmit = async (data) => {
     // TODO
-    let sdk = new MkdSDK();
-    try {
-      let res = await sdk.login(data.email, data.password, "admin")
-      dispatch({
-        type: "LOGIN",
-        payload: {
-          token: res.token,
-          role: res.role,
-          user: res.user_id
-        }
-      })
-      showToast(globalDispatch, "Logged in");
-      navigate("/admin/dashboard")
-    } catch (err) {
-      showToast(globalDispatch, "Login failed, please try again")
+    if (!loggingIn) {
+      let sdk = new MkdSDK();
+      setLoggingIn(true);
+      try {
+        let res = await sdk.login(data.email, data.password, "admin")
+        dispatch({
+          type: "LOGIN",
+          payload: {
+            token: res.token,
+            role: res.role,
+            user: res.user_id
+          }
+        })
+        showToast(globalDispatch, "Logged in");
+        navigate("/admin/dashboard")
+        setLoggingIn(false);
+      } catch (err) {
+        setLoggingIn(false);
+        showToast(globalDispatch, "Login failed, please try again")
+      }
     }
   };
 
@@ -94,8 +100,9 @@ const AdminLoginPage = () => {
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            disabled={loggingIn}
           >
-            Sign In
+            {loggingIn ? "Logging in..." : "Sign In"}
           </button>
         </div>
       </form>

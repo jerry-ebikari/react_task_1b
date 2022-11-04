@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import MkdSDK from "../utils/MkdSDK";
 import { AuthContext } from "../authContext";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "../styles/AdminDashboardPage.css";
 
 
