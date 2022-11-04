@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { useDrag } from 'react-dnd';
 import MkdSDK from "../utils/MkdSDK";
 import { AuthContext } from "../authContext";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 import "../styles/AdminDashboardPage.css";
 
 
@@ -40,6 +40,7 @@ let sdk = new MkdSDK();
 const AdminDashboardPage = () => {
   let [currentTime, setCurrentTime] = useState(new Date());
   let [videos, setVideos] = useState([]);
+  let [draggableList, setDraggableList] = useState([]);
   let [page, setPage] = useState(1);
   let [limit, setLimit] = useState(10);
   const { dispatch } = React.useContext(AuthContext);
@@ -78,6 +79,18 @@ const AdminDashboardPage = () => {
     })
   }
 
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+    const items = [...draggableList];
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    setDraggableList(items);
+  }
+
+  useEffect(() => {
+    setDraggableList([...videos]);
+  }, [videos])
+
   useEffect(() => {
     const t = setInterval(() => {
       setCurrentTime(new Date());
@@ -113,32 +126,60 @@ const AdminDashboardPage = () => {
           <p className="date">{formatTime(currentTime)}</p>
         </div>
       </div>
-      <div className="table">
-        <p className="table-header sno-header">#</p>
-        <p className="table-header">Title</p>
-        <p className="table-header">Author</p>
-        <p className="table-header last">Most Liked</p>
-        {videos.map((video, index) => {
-          return (<>
-            <p className="sno v-align cell left-cell">{(page - 1) * 10 + (index + 1)}</p>
-            <div className="video-title-section v-align cell">
-              <img src={video.photo} alt="" />
-              <p>{video.title}</p>
-            </div>
-            <p className="author v-align cell">{video.username}</p>
-            <div className="video-like-section v-align cell right-cell">
-              <p className="video-like">{video.like}</p>
-              <img src="/assets/icons/up-arrow.svg" alt="" />
-            </div>
-          </>)
-        })}
-      </div>
-      {
 
-      <div className="next-prev-section">
-        <button className="control-btn" onClick={previousPage} disabled={page == 1}>Previous</button>
-        <button className="control-btn" onClick={nextPage}>Next</button>
+      <div className="table1">
+        <div className="table-header-row">
+          <p className="header-cell">#</p>
+          <p className="header-cell">Title</p>
+          <p className="header-cell">Author</p>
+          <p className="header-cell last">Most Liked</p>
+        </div>
+
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="videos">
+            {(provided) => (
+              <div className="table-body" {...provided.droppableProps} ref={provided.innerRef}>
+                {draggableList.map((video, index) => {
+                  return (
+                    <Draggable
+                      key={String((page - 1) * 10 + (index + 1))}
+                      draggableId={String((page - 1) * 10 + (index + 1))}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          className="row"
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          ref={provided.innerRef}
+                        >
+                          <p className="v-align body-cell cell sno">{(page - 1) * 10 + (index + 1)}</p>
+                          <div className="video-title-section v-align body-cell cell">
+                            <img src={video.photo} alt="" />
+                            <p>{video.title}</p>
+                          </div>
+                          <p className="author v-align cell">{video.username}</p>
+                          <div className="video-like-section v-align body-cell cell">
+                            <p className="video-like">{video.like}</p>
+                            <img src="/assets/icons/up-arrow.svg" alt="" />
+                          </div>
+                        </div>
+                      )}
+                    </Draggable>
+                  )
+                })}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
+
+      {
+        <div className="next-prev-section">
+          <button className="control-btn" onClick={previousPage} disabled={page == 1}>Previous</button>
+          <button className="control-btn" onClick={nextPage}>Next</button>
+        </div>
       }
     </>
   );
